@@ -1,4 +1,4 @@
-package com;
+package com.noted;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
