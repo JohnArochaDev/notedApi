@@ -33,4 +33,23 @@ public class UserService {
         return new User(userId, username, null);
     }
 
+    public void deleteUser(String username, String rawPassword) {
+        if (userDao.usernameExists(username)) {
+            throw new RuntimeException("Username Already Taken");
+        }
+        userDao.deleteUser(username, rawPassword);
+    }
+
+    public User login(String username, String rawPassword) {
+        User user = userDao.findUserByUsername(username);
+
+        if (passwordEncoder.matches(rawPassword, user.getPassword())) {
+            user.setPassword(null);
+			
+            return user;
+        }
+
+        throw new RuntimeException("Invalid username or password");
+    }
+
 }
