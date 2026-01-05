@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.noted.dto.RegisterRequest;
+import com.noted.dto.UserRequest;
 import com.noted.models.User;
 import com.noted.services.UserService;
 
@@ -22,12 +22,36 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<User> register(@RequestBody UserRequest request) {
         try {
             User user = userService.createUser(request.username(), request.password());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody UserRequest request) {
+        try {
+            User user = userService.login(request.username(), request.password());
+
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    @PostMapping("/delete-account")
+    public ResponseEntity<Void> deleteAccount(@RequestBody UserRequest request) {
+        try {
+            userService.deleteUser(request.username(), request.password());
+
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
         }
     }
 }
