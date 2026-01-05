@@ -47,9 +47,10 @@ public class UserDao {
 
         UUID userId = (UUID) row.get("user_id");
         String foundUsername = (String) row.get("username");
+        String hashedPassword = (String) row.get("password");
 
 
-        return new User(userId, foundUsername, null);
+        return new User(userId, foundUsername, hashedPassword);
     }
 
     public void deleteUser(String username, String rawPassword) {
