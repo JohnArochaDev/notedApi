@@ -1,6 +1,12 @@
+CREATE TABLE IF NOT EXISTS users (
+    user_id UUID PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS user_folder (
-    id UUID PRIMARY KEY
-    user_id UUID NOT NULL UNIQUE,   -- a user_folder is owned by only one useer
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL UNIQUE,   -- a user_folder is owned by only one user
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
@@ -32,10 +38,4 @@ CREATE TABLE IF NOT EXISTS nodule (
     height INT NOT NULL,
     text_content VARCHAR(10000),
     FOREIGN KEY (parent_id) REFERENCES node_file(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS users (
-    user_id UUID PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
 );
