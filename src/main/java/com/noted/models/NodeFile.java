@@ -1,23 +1,19 @@
 package com.noted.models;
 
-import java.util.Arrays;
 import java.util.UUID;
 
-public class Folder {
+public class NodeFile {
 
     public UUID id;
     public UUID parentId;
     public String name;
-    public NodeFileType type = NodeFileType.FOLDER;
-    public Folder[] subfolders;
-    public NodeFile[] nodes;
+    public NodeFileType type = NodeFileType.NODE;
 
-    public Folder(UUID id, UUID parentId, String name, Folder[] subfolders, NodeFile[] nodes) {
+    public NodeFile(UUID id, UUID parentId, String name, NodeFileType type) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
-        this.subfolders = subfolders;
-        this.nodes = nodes;
+        this.type = type;
     }
 
     public UUID getId() {
@@ -36,14 +32,6 @@ public class Folder {
         return type;
     }
 
-    public Folder[] getSubfolders() {
-        return subfolders;
-    }
-
-    public NodeFile[] getNodes() {
-        return nodes;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -60,24 +48,13 @@ public class Folder {
         this.type = type;
     }
 
-    public void setSubfolders(Folder[] subfolders) {
-        this.subfolders = subfolders;
-    }
-
-    public void setNodes(NodeFile[] nodes) {
-        this.nodes = nodes;
-    }
-
     @Override
     public String toString() {
-        return "Folder{"
+        return "NodeFile{"
                 + "id=" + id
                 + ", parentId=" + parentId
                 + ", name='" + name + '\''
                 + ", type=" + type
-                + ", subfolders=" + Arrays.toString(subfolders)
-                + ", nodes=" + Arrays.toString(nodes)
                 + '}';
-
     }
 }
