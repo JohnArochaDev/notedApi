@@ -6,15 +6,21 @@ import java.util.UUID;
 public class UserFolder {
 
     public UUID id;
+    public UUID userId;
     public Folder[] folders;
 
-    public UserFolder(UUID id, Folder[] folders) {
+    public UserFolder(UUID id, UUID userId, Folder[] folders) {
         this.id = id;
+        this.userId = userId;
         this.folders = folders;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public UUID getUserId() {
+        return userId;
     }
 
     public Folder[] getFolders() {
@@ -25,6 +31,10 @@ public class UserFolder {
         this.id = id;
     }
 
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
     public void setFolders(Folder[] folders) {
         this.folders = folders;
     }
@@ -33,6 +43,7 @@ public class UserFolder {
     public String toString() {
         return "UserFolder{"
                 + "id=" + id
+                + ", userId=" + userId
                 + ", folders=" + Arrays.toString(folders)
                 + '}';
     }
