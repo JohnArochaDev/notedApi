@@ -4,7 +4,7 @@ DELETE FROM node_file;
 DELETE FROM folder;
 DELETE FROM user_folder;
 DELETE FROM users;
-
+        
 -- 1. Test User
 INSERT INTO users (user_id, username, password)
 VALUES (
