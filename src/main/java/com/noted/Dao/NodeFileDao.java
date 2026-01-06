@@ -18,16 +18,20 @@ public class NodeFileDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<NodeFile> getNodesByUserFolderId(UUID userFolderId) {
-        String sql = """
-            SELECT nf.id, nf.parent_id, nf.name, nf.type
-            FROM node_file nf
-            JOIN folder f ON nf.parent_id = f.id
-            WHERE f.user_folder_id = ?
-            """;
+    private static final String GET_NODES_BY_USER_FOLDER_ID = """
+        SELECT 
+            node_file.id,
+            node_file.parent_id,
+            node_file.name,
+            node_file.type
+        FROM node_file
+        JOIN folder ON node_file.parent_id = folder.id
+        WHERE folder.user_folder_id = ?
+        """;
 
+    public List<NodeFile> getNodesByUserFolderId(UUID userFolderId) {
         return jdbcTemplate.query(
-                sql,
+                GET_NODES_BY_USER_FOLDER_ID,
                 (rs, _) -> new NodeFile(
                         UUID.fromString(rs.getString("id")),
                         UUID.fromString(rs.getString("parent_id")),
