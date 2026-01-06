@@ -1,5 +1,6 @@
 package com.noted.Dao;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,14 +44,17 @@ public class UserDao {
     }
 
     public User findUserByUsername(String username) {
-        Map<String, Object> row = jdbcTemplate.queryForMap(FIND_BY_USERNAME, username);
+        List<User> results = jdbcTemplate.query(
+                FIND_BY_USERNAME,
+                (rs, _) -> new User(
+                        UUID.fromString(rs.getString("user_id")),
+                        rs.getString("username"),
+                        rs.getString("password")
+                ),
+                username
+        );
 
-        UUID userId = (UUID) row.get("user_id");
-        String foundUsername = (String) row.get("username");
-        String hashedPassword = (String) row.get("password");
-
-
-        return new User(userId, foundUsername, hashedPassword);
+        return results.isEmpty() ? null : results.get(0);
     }
 
     public void deleteUser(String username, String rawPassword) {

@@ -26,6 +26,9 @@ public class UserController {
         try {
             User user = userService.createUser(request.username(), request.password());
 
+            // here I need to create a UserFolder and relate it to user
+            
+
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -42,6 +45,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
+    // add a logout route and JWT
 
     @PostMapping("/delete-account")
     public ResponseEntity<Void> deleteAccount(@RequestBody UserRequest request) {
