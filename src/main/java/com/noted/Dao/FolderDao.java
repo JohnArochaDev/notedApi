@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.noted.models.Folder;
 
+@Repository
 public class FolderDao {
 
     private final JdbcTemplate jdbcTemplate;
