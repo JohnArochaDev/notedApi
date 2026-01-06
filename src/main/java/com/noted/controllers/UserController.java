@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.noted.dto.LoginResponse;
 import com.noted.dto.UserChangePassword;
 import com.noted.dto.UserRequest;
 import com.noted.models.User;
 import com.noted.services.UserFolderService;
 import com.noted.services.UserService;
+import com.noted.util.JwtUtil;
 
 @RestController
 @RequestMapping("/noted/users")
@@ -19,10 +21,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserFolderService userFolderService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService, UserFolderService userFolderService) {
+    public UserController(UserService userService, UserFolderService userFolderService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.userFolderService = userFolderService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -54,13 +58,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody UserRequest request) {
+    public ResponseEntity<?> login(@RequestBody UserRequest request) {
         try {
             User user = userService.login(request.username(), request.password());
 
-            return ResponseEntity.ok(user);
+            String token = jwtUtil.generateToken(user.getUserId(), user.getUsername());
+
+            return ResponseEntity.ok(new LoginResponse(token, user));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
 
