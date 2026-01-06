@@ -7,7 +7,7 @@ public class NodeFile {
     public UUID id;
     public UUID parentId;
     public String name;
-    public NodeFileType type = NodeFileType.NODE;
+    public NodeFileType type = NodeFileType.node;
 
     public NodeFile(UUID id, UUID parentId, String name, NodeFileType type) {
         this.id = id;

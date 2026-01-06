@@ -8,7 +8,7 @@ public class Folder {
     public UUID id;
     public UUID parentId;
     public String name;
-    public NodeFileType type = NodeFileType.FOLDER;
+    public NodeFileType type = NodeFileType.folder;
     public Folder[] subfolders;
     public NodeFile[] nodes;
 

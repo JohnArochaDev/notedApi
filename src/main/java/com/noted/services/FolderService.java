@@ -7,12 +7,16 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.noted.Dao.FolderDao;
 import com.noted.Dao.NodeFileDao;
 import com.noted.models.Folder;
 import com.noted.models.NodeFile;
 import com.noted.models.UserFolder;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class FolderService {
@@ -91,7 +95,25 @@ public class FolderService {
     }
 
     private UUID getCurrentUserId() {
-        // TODO: Implement properly using JWT context (e.g., request attribute or SecurityContext)
-        throw new UnsupportedOperationException("getCurrentUserId not implemented yet");
+        ServletRequestAttributes attributes
+                = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes == null) {
+            throw new IllegalStateException("No HTTP request context available — this method must be called during a web request");
+        }
+
+        HttpServletRequest request = attributes.getRequest();
+        Object userIdObj = request.getAttribute("userId");
+
+        if (userIdObj == null) {
+            throw new IllegalStateException("Authenticated user ID not found — invalid or missing JWT");
+        }
+
+        // Safe cast — we know we stored a UUID
+        if (!(userIdObj instanceof UUID)) {
+            throw new IllegalStateException("Invalid user ID type in request attribute");
+        }
+
+        return (UUID) userIdObj;
     }
 }

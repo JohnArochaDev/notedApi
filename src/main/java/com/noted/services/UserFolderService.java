@@ -21,7 +21,6 @@ public class UserFolderService {
     }
 
     public void createUserFolder(UUID userId) {
-
         UUID id = UUID.randomUUID();
 
         if (!userDao.userIdExists(userId)) {
@@ -29,5 +28,10 @@ public class UserFolderService {
         }
 
         userFolderDao.createUserFolder(id, userId);
+    }
+
+    public UUID findUserFolderIdByUserId(UUID userId) {
+        return userFolderDao.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("UserFolder not found for user: " + userId));
     }
 }

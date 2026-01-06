@@ -1,6 +1,7 @@
 package com.noted.Dao;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,26 +18,40 @@ public class UserFolderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static final String INSERT_USER_FOLDER = "INSERT INTO user_folder (id, user_id) VALUES (?, ?);";
+    private static final String INSERT_USER_FOLDER
+            = "INSERT INTO user_folder (id, user_id) VALUES (?, ?);";
 
-    private static final String FIND_USER_FOLDER_BY_USER_ID = "SELECT * FROM user_folder WHERE user_id = ?;";
+    private static final String FIND_USER_FOLDER_ID_BY_USER_ID
+            = "SELECT id FROM user_folder WHERE user_id = ?;";
 
-    public void createUserFolder(UUID id, UUID user_id) {
-        jdbcTemplate.update(INSERT_USER_FOLDER, id, user_id);
+    private static final String FIND_USER_FOLDER_BY_USER_ID
+            = "SELECT * FROM user_folder WHERE user_id = ?;";
+
+    public void createUserFolder(UUID id, UUID userId) {
+        jdbcTemplate.update(INSERT_USER_FOLDER, id, userId);
     }
 
-    public UserFolder findUserFolder(UUID user_id) {
+    public Optional<UUID> findByUserId(UUID userId) {
+        List<UUID> results = jdbcTemplate.query(
+                FIND_USER_FOLDER_ID_BY_USER_ID,
+                (rs, _) -> UUID.fromString(rs.getString("id")),
+                userId
+        );
+
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
+
+    public UserFolder findUserFolder(UUID userId) {
         List<UserFolder> results = jdbcTemplate.query(
                 FIND_USER_FOLDER_BY_USER_ID,
                 (rs, _) -> new UserFolder(
                         UUID.fromString(rs.getString("id")),
                         UUID.fromString(rs.getString("user_id")),
-                        null // populate the users folders here. do later when folders exist
+                        null // folders array populated later in FolderService
                 ),
-                user_id
+                userId
         );
 
-        // should pull the function from the to-be FolderDao that will find all of the folders from a given User Folder, or I wont do that here, but in the parent where this is called, i chain that function after this one to populate that data
         return results.isEmpty() ? null : results.get(0);
     }
 }
