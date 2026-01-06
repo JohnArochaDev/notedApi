@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.noted.models.UserFolder;
 
+@Repository
 public class UserFolderDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -19,7 +21,7 @@ public class UserFolderDao {
 
     private static final String FIND_USER_FOLDER_BY_USER_ID = "SELECT * FROM user_folder WHERE user_id = ?;";
 
-    public void creatUserFolder(UUID id, String user_id) {
+    public void createUserFolder(UUID id, UUID user_id) {
         jdbcTemplate.update(INSERT_USER_FOLDER, id, user_id);
     }
 

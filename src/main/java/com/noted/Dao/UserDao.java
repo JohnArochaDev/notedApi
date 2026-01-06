@@ -31,6 +31,8 @@ public class UserDao {
     private static final String FIND_BY_USERNAME
             = "SELECT user_id, username, password FROM users WHERE username = ?";
 
+    private static final String USER_ID_EXISTS = "SELECT COUNT(*) FROM users WHERE user_id = ?";
+
     private static final String USERNAME_EXISTS
             = "SELECT COUNT(*) FROM users WHERE username = ?";
 
@@ -40,6 +42,11 @@ public class UserDao {
 
     public boolean usernameExists(String username) {
         Integer count = jdbcTemplate.queryForObject(USERNAME_EXISTS, Integer.class, username);
+        return count != null && count > 0;
+    }
+
+    public boolean userIdExists(UUID userId) {
+        Integer count = jdbcTemplate.queryForObject(USER_ID_EXISTS, Integer.class, userId);
         return count != null && count > 0;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.noted.dto.UserRequest;
 import com.noted.models.User;
+import com.noted.services.UserFolderService;
 import com.noted.services.UserService;
 
 @RestController
@@ -16,9 +17,11 @@ import com.noted.services.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final UserFolderService userFolderService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserFolderService userFolderService) {
         this.userService = userService;
+        this.userFolderService = userFolderService;
     }
 
     @PostMapping("/register")
@@ -27,7 +30,7 @@ public class UserController {
             User user = userService.createUser(request.username(), request.password());
 
             // here I need to create a UserFolder and relate it to user
-            
+            userFolderService.createUserFolder(user.getUserId());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (RuntimeException e) {
@@ -47,7 +50,6 @@ public class UserController {
     }
 
     // add a logout route and JWT
-
     @PostMapping("/delete-account")
     public ResponseEntity<Void> deleteAccount(@RequestBody UserRequest request) {
         try {
