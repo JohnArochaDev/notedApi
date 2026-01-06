@@ -52,4 +52,20 @@ public class UserService {
         throw new RuntimeException("Invalid username or password");
     }
 
+    public void updateUserPassword(String username, String oldPassword, String newPassword) {
+        User loggedInUser = login(username, oldPassword);
+
+        if (loggedInUser == null) {
+            throw new RuntimeException("Invalid username or password");
+        }
+
+        if (oldPassword.equals(newPassword)) {
+            throw new IllegalArgumentException("New password cannot be the same as the old password");
+        }
+
+        String newHashedPassword = passwordEncoder.encode(newPassword);
+
+        userDao.updatePassword(newHashedPassword, loggedInUser.getUserId());
+    }
+
 }

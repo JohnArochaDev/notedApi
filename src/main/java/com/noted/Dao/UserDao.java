@@ -36,6 +36,8 @@ public class UserDao {
     private static final String USERNAME_EXISTS
             = "SELECT COUNT(*) FROM users WHERE username = ?";
 
+    private static final String UPDATE_PASSWORD_BY_USER_ID = "UPDATE users SET password = ? WHERE user_id = ?;";
+
     public void insertUser(UUID userId, String username, String hashedPassword) {
         jdbcTemplate.update(INSERT_USER, userId, username, hashedPassword);
     }
@@ -83,4 +85,11 @@ public class UserDao {
         }
     }
 
+    public void updatePassword(String newPassword, UUID user_id) {
+        int rowsAffected = jdbcTemplate.update(UPDATE_PASSWORD_BY_USER_ID, newPassword, user_id);
+
+        if (rowsAffected == 0) {
+            throw new RuntimeException("User not found or update failed");
+        }
+    }
 }

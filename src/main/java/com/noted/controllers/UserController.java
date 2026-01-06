@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.noted.dto.UserChangePassword;
 import com.noted.dto.UserRequest;
 import com.noted.models.User;
 import com.noted.services.UserFolderService;
@@ -35,6 +36,20 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody UserChangePassword request) {
+        try {
+
+            userService.updateUserPassword(request.username(), request.oldPassword(), request.newPassword());
+
+            return ResponseEntity.noContent().build();
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid old password");
         }
     }
 

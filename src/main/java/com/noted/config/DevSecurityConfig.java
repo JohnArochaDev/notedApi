@@ -14,7 +14,7 @@ public class DevSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/noted/users/register", "/noted/users/login", "/noted/users/delete-account").permitAll() // Allow these public endpoints without auth
+                .requestMatchers("/noted/users/register", "/noted/users/login", "/noted/users/change-password", "/noted/users/delete-account").permitAll() // Allow these public endpoints without auth
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 )
