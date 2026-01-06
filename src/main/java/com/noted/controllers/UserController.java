@@ -29,12 +29,12 @@ public class UserController {
         try {
             User user = userService.createUser(request.username(), request.password());
 
-            // here I need to create a UserFolder and relate it to user
+            // create a user folder when a user is created
             userFolderService.createUserFolder(user.getUserId());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 
