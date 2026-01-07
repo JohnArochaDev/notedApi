@@ -18,6 +18,9 @@ public class NodeFileDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private static final String NODE_FILE_EXISTS
+            = "SELECT COUNT(*) FROM node_file WHERE id = ?;";
+
     private static final String INSERT_NODE_FILE = "INSERT INTO node_file (id, parent_id, name, type) VALUES (?, ?, ?, ?);";
 
     private static final String UPDATE_NODE_BY_ID = "UPDATE node_file SET name = ? WHERE id = ?;";
@@ -55,5 +58,11 @@ public class NodeFileDao {
 
     public void updateNodeById(UUID id, String name) {
         jdbcTemplate.update(UPDATE_NODE_BY_ID, name, id);
+    }
+
+    public boolean nodeFileExistsById(UUID id) {
+        Integer count = jdbcTemplate.queryForObject(NODE_FILE_EXISTS, Integer.class, id);
+
+        return count != null && count > 0;
     }
 }

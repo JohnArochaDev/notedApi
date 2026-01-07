@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.noted.models.Coordinates;
 import com.noted.models.Nodule;
+import com.noted.models.NoduleData;
 
 @Repository
 public class NoduleDao {
@@ -27,8 +28,16 @@ public class NoduleDao {
     private static final String UPDATE_NODULE
             = "UPDATE nodule SET x = ?, y = ?, width = ?, height = ?, text_content = ? WHERE id = ?;";
 
-    public void insertNodule(UUID id, UUID parent_id, Integer x, Integer y, Integer width, Integer height, String text_content) {
+    private static final String NODULE_EXISTS
+            = "SELECT COUNT(*) FROM nodule WHERE id = ?;";
+
+    public Nodule insertNodule(UUID id, UUID parent_id, Integer x, Integer y, Integer width, Integer height, String text_content) {
         jdbcTemplate.update(INSERT_NODULE, id, parent_id, "textNode", x, y, width, height, text_content);
+
+        Integer integerWidth = width;
+        Integer integerHeight = height;
+
+        return new Nodule(id, parent_id, "textNode", new Coordinates(x, y), integerWidth, integerHeight, new NoduleData(text_content));
     }
 
     public Nodule[] getNodulesByParentId(UUID parent_id) {
@@ -50,5 +59,11 @@ public class NoduleDao {
 
     public void updateNoduleById(UUID id, int x, int y, int width, int height, String text_content) {
         jdbcTemplate.update(UPDATE_NODULE, x, y, width, height, text_content, id);
+    }
+
+    public boolean noduleExistsById(UUID id) {
+        Integer count = jdbcTemplate.queryForObject(NODULE_EXISTS, Integer.class, id);
+
+        return count != null && count > 0;
     }
 }
