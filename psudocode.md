@@ -1,0 +1,2 @@
+[TODO] need to add ability to UPDATE nodules(to update a nodule we will check if the id exists, if so we update it, if the id does not exist we create it, update, then pull the data back down from the db. we must do this to ensure the id's always match up, AND to ensure there are not loose nodes. other option is when I update, I delete ALL nodes belonging to a file, and overwrite with a new set of nodes) folders AND node files.
+[TODO] create a nodule service, but add routes to the folder controller
