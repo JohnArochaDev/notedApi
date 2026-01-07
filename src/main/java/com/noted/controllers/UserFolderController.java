@@ -112,7 +112,14 @@ public class UserFolderController {
     @PostMapping("/nodule")
     public ResponseEntity<?> createNodule(@RequestBody NewNoduleRequest body) {
         try {
-            Nodule nodule = noduleService.createNodule((UUID) body.parent_id(), (int) body.x(), (int) body.y(), (int) body.width(), (int) body.height(), (String) body.textContent());
+            Nodule nodule = noduleService.createNodule(
+                    (UUID) body.parent_id(),
+                    (int) body.x(),
+                    (int) body.y(),
+                    (int) body.width(),
+                    (int) body.height(),
+                    (String) body.textContent()
+            );
 
             return ResponseEntity.ok().body(nodule);
         } catch (Exception e) {
@@ -124,7 +131,14 @@ public class UserFolderController {
     @PutMapping("/nodule")
     public ResponseEntity<?> updateNodule(@RequestBody UpdateNoduleRequest body) {
         try {
-            noduleService.updateNodule(body.id(), body.x(), body.y(), body.width(), body.height(), body.textContent());
+            noduleService.updateNodule(
+                    body.id(),
+                    body.x(),
+                    body.y(),
+                    body.width(),
+                    body.height(),
+                    body.textContent()
+            );
 
             return ResponseEntity.ok().body(null);
 
