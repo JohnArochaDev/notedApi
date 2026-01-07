@@ -1,4 +1,3 @@
-// src/main/java/com/noted/dto/NoduleOperation.java
 package com.noted.dto;
 
 import java.util.UUID;
