@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.noted.dto.NewFolderRequest;
 import com.noted.dto.NewNodeFileRequest;
-import com.noted.dto.NewNoduleRequest;
+import com.noted.dto.NoduleOperation;
 import com.noted.dto.UpdateFolderRequest;
 import com.noted.dto.UpdateNodeRequest;
-import com.noted.dto.UpdateNoduleRequest;
 import com.noted.models.Folder;
 import com.noted.models.NodeFile;
 import com.noted.models.Nodule;
@@ -119,42 +118,47 @@ public class UserFolderController {
         return ResponseEntity.ok(nodules);
     }
 
-    @PostMapping("/nodule")
-    public ResponseEntity<?> createNodule(@RequestBody NewNoduleRequest body) {
-        try {
-            Nodule nodule = noduleService.createNodule(
-                    (UUID) body.parent_id(),
-                    (int) body.x(),
-                    (int) body.y(),
-                    (int) body.width(),
-                    (int) body.height(),
-                    (String) body.textContent()
-            );
+    @PostMapping("/nodules")
+    public ResponseEntity<Nodule[]> saveNodules(
+            @RequestBody List<NoduleOperation> operations,
+            HttpServletRequest request) {
 
-            return ResponseEntity.ok().body(nodule);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to create node: " + e.getMessage());
+        UUID parentId = operations.stream()
+                .map(op -> op.id() == null ? op.parentId() : null)
+                .filter(java.util.Objects::nonNull)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("At least one create operation must provide parentId"));
 
+        for (NoduleOperation op : operations) {
+            if (op.id() == null) {
+                // CREATE
+                if (op.parentId() == null) {
+                    throw new IllegalArgumentException("parentId required for new nodule");
+                }
+                noduleService.createNodule(
+                        op.parentId(),
+                        op.x(),
+                        op.y(),
+                        op.width(),
+                        op.height(),
+                        op.textContent()
+                );
+            } else {
+                // UPDATE
+                noduleService.updateNodule(
+                        op.id(),
+                        op.x(),
+                        op.y(),
+                        op.width(),
+                        op.height(),
+                        op.textContent()
+                );
+            }
         }
-    }
 
-    @PutMapping("/nodule")
-    public ResponseEntity<?> updateNodule(@RequestBody UpdateNoduleRequest body) {
-        try {
-            noduleService.updateNodule(
-                    body.id(),
-                    body.x(),
-                    body.y(),
-                    body.width(),
-                    body.height(),
-                    body.textContent()
-            );
+        Nodule[] updatedNodules = noduleService.getNodulesByParentId(parentId);
 
-            return ResponseEntity.ok().body(null);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to update node: " + e.getMessage());
-        }
+        return ResponseEntity.ok(updatedNodules);
     }
 
     private UUID getCurrentUserId(HttpServletRequest request) {
