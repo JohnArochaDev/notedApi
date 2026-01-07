@@ -8,12 +8,14 @@ public class NodeFile {
     public UUID parentId;
     public String name;
     public NodeFileType type = NodeFileType.node;
+    public Nodule[] nodules;
 
-    public NodeFile(UUID id, UUID parentId, String name, NodeFileType type) {
+    public NodeFile(UUID id, UUID parentId, String name, NodeFileType type, Nodule[] nodules) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
         this.type = type;
+        this.nodules = nodules;
     }
 
     public UUID getId() {
@@ -32,6 +34,10 @@ public class NodeFile {
         return type;
     }
 
+    public Nodule[] getNodules() {
+        return nodules;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -46,6 +52,10 @@ public class NodeFile {
 
     public void setType(NodeFileType type) {
         this.type = type;
+    }
+
+    public void setNodules(Nodule[] nodules) {
+        this.nodules = nodules;
     }
 
     @Override

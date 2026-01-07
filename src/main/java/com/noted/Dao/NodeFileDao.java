@@ -38,7 +38,8 @@ public class NodeFileDao {
                         UUID.fromString(rs.getString("id")),
                         UUID.fromString(rs.getString("parent_id")),
                         rs.getString("name"),
-                        NodeFileType.valueOf(rs.getString("type"))
+                        NodeFileType.valueOf(rs.getString("type")),
+                        null // this can be populated later
                 ),
                 userFolderId
         );
