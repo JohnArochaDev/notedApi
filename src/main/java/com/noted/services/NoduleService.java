@@ -19,13 +19,15 @@ public class NoduleService {
         this.nodeFileDao = nodeFileDao;
     }
 
-    public Nodule createNodule(UUID id, UUID parentId, int x, int y, int width, int height, String textContent) {
+    public Nodule createNodule(UUID parentId, int x, int y, int width, int height, String textContent) {
 
         boolean nodeFile = nodeFileDao.nodeFileExistsById(parentId);
 
         if (!nodeFile) {
             throw new RuntimeException("No file exists to save to");
         }
+
+        UUID id = UUID.randomUUID();
 
         return noduleDao.insertNodule(id, parentId, x, y, width, height, textContent);
     }

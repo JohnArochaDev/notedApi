@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.noted.dto.NewFolderRequest;
 import com.noted.dto.NewNodeFileRequest;
+import com.noted.dto.NewNoduleRequest;
 import com.noted.dto.UpdateFolderRequest;
 import com.noted.dto.UpdateNodeRequest;
 import com.noted.models.Folder;
 import com.noted.models.NodeFile;
+import com.noted.models.Nodule;
 import com.noted.models.UserFolder;
 import com.noted.services.FolderService;
 import com.noted.services.NodeFileService;
+import com.noted.services.NoduleService;
 import com.noted.services.UserFolderService;
 import com.noted.services.UserService;
 
@@ -31,11 +34,13 @@ public class UserFolderController {
     private final FolderService folderService;
     private final UserFolderService userFolderService;
     private final NodeFileService nodeFileService;
+    private final NoduleService noduleService;
 
-    public UserFolderController(UserService userService, FolderService folderService, UserFolderService userFolderService, NodeFileService nodeFileService) {
+    public UserFolderController(UserService userService, FolderService folderService, UserFolderService userFolderService, NodeFileService nodeFileService, NoduleService noduleService) {
         this.folderService = folderService;
         this.userFolderService = userFolderService;
         this.nodeFileService = nodeFileService;
+        this.noduleService = noduleService;
     }
 
     @GetMapping("/folders")
@@ -99,6 +104,18 @@ public class UserFolderController {
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update node: " + e.getMessage());
+
+        }
+    }
+
+    @PostMapping("/nodule")
+    public ResponseEntity<?> createNodule(@RequestBody NewNoduleRequest body) {
+        try {
+            Nodule nodule = noduleService.createNodule((UUID) body.parent_id(), (int) body.x(), (int) body.y(), (int) body.width(), (int) body.height(), (String) body.textContent());
+
+            return ResponseEntity.ok().body(nodule);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to create node: " + e.getMessage());
 
         }
     }
