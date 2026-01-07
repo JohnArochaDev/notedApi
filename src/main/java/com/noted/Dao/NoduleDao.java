@@ -24,6 +24,9 @@ public class NoduleDao {
     private static final String INSERT_NODULE
             = "INSERT INTO nodule (id, parent_id, type, x, y, width, height, text_content) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
+    private static final String UPDATE_NODULE
+            = "UPDATE nodule SET x = ?, y = ?, width = ?, height = ?, text_content = ? WHERE id = ?;";
+
     public void insertNodule(UUID id, UUID parent_id, Integer x, Integer y, Integer width, Integer height, String text_content) {
         jdbcTemplate.update(INSERT_NODULE, id, parent_id, "textNode", x, y, width, height, text_content);
     }
@@ -43,5 +46,9 @@ public class NoduleDao {
         );
 
         return results.toArray(Nodule[]::new);
+    }
+
+    public void updateNoduleById(UUID id, int x, int y, int width, int height, String text_content) {
+        jdbcTemplate.update(UPDATE_NODULE, x, y, width, height, text_content, id);
     }
 }
