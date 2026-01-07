@@ -5,11 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,26 +23,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF — JWT is stateless, no need for CSRF protection
+                // disable CSRF — JWT is stateless, no need for CSRF protection
                 .csrf(csrf -> csrf.disable())
-                // Make session stateless — we don't use server-side sessions
+                // make session stateless — we don't use server-side sessions
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Public endpoints — no authentication required
+                // public endpoints — no authentication required
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/noted/users/register",
                         "/noted/users/login"
                 ).permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated() // All other endpoints require valid JWT
+                .anyRequest().authenticated() // all other endpoints require valid JWT
                 )
-                // Allow frames for H2 console
+                // allow frames for H2 console
                 .headers(headers
                         -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
-                // Add JWT filter before Spring's default authentication filter
+                // add JWT filter before Spring's default authentication filter
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

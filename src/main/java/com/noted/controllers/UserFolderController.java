@@ -31,13 +31,13 @@ public class UserFolderController {
 
     @GetMapping("/folders")
     public ResponseEntity<UserFolder> getUserFolderHierarchy(HttpServletRequest request) {
-        // Extract current user ID from JWT (set in JwtFilter)
+        // extract current user ID from JWT (set in JwtFilter)
         UUID currentUserId = getCurrentUserId(request);
 
-        // Find this user's UserFolder ID
+        // dind this user's UserFolder ID
         UUID userFolderId = userFolderService.findUserFolderIdByUserId(currentUserId);
 
-        // Build and return the full nested hierarchy
+        // build and return the full nested hierarchy
         UserFolder hierarchy = folderService.getUserFolderHierarchy(userFolderId);
 
         return ResponseEntity.ok(hierarchy);

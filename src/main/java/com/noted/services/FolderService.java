@@ -40,22 +40,22 @@ public class FolderService {
             return new UserFolder(userFolderId, getCurrentUserId(), new Folder[0]);
         }
 
-        // Build lookup maps
+        // build lookup maps
         Map<UUID, List<Folder>> childrenMap = new HashMap<>();
         Map<UUID, List<NodeFile>> nodesMap = new HashMap<>();
 
-        // Initialize empty lists for every folder
+        // initialize empty lists for every folder
         for (Folder folder : allFolders) {
             childrenMap.put(folder.getId(), new ArrayList<>());
             nodesMap.put(folder.getId(), new ArrayList<>());
         }
 
-        // Assign nodes to their parent folders
+        // assign nodes to their parent folders
         for (NodeFile node : allNodes) {
             nodesMap.computeIfAbsent(node.getParentId(), k -> new ArrayList<>()).add(node);
         }
 
-        // Link child folders to parents
+        // link child folders to parents
         for (Folder folder : allFolders) {
             if (folder.getParentId() != null) {
                 childrenMap.computeIfAbsent(folder.getParentId(), k -> new ArrayList<>())
@@ -63,7 +63,7 @@ public class FolderService {
             }
         }
 
-        // Build root folders with full nesting
+        // build root folders with full nesting
         List<Folder> rootFolders = new ArrayList<>();
         for (Folder folder : allFolders) {
             if (folder.getParentId() == null) {
@@ -112,7 +112,6 @@ public class FolderService {
             throw new IllegalStateException("Authenticated user ID not found — invalid or missing JWT");
         }
 
-        // Safe cast — we know we stored a UUID
         if (!(userIdObj instanceof UUID)) {
             throw new IllegalStateException("Invalid user ID type in request attribute");
         }

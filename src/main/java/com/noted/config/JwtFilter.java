@@ -34,34 +34,34 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        // Only process if header exists and starts with "Bearer "
+        // only process if header exists and starts with "Bearer "
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7); // Remove "Bearer " prefix
+            String token = authHeader.substring(7); // remove "Bearer " prefix
 
             if (jwtUtil.isTokenValid(token)) {
                 String username = jwtUtil.extractUsername(token);
                 UUID userId = jwtUtil.extractUserId(token);
 
-                // Create authentication object for Spring Security
+                // create authentication object for Spring Security
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         username,
                         null,
-                        List.of(new SimpleGrantedAuthority("ROLE_USER")) // Standard role prefix
+                        List.of(new SimpleGrantedAuthority("ROLE_USER")) // standard role prefix
                 );
 
-                // Set request details (IP, session ID, etc.)
+                // set request details (IP, session ID, etc.)
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // Register the authenticated user in the SecurityContext
+                // register the authenticated user in the SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                // Also expose userId and username via request attributes for easy access
+                // also expose userId and username via request attributes for easy access
                 request.setAttribute("userId", userId);
                 request.setAttribute("username", username);
             }
         }
 
-        // Always continue the filter chain
+        // always continue the filter chain
         filterChain.doFilter(request, response);
     }
 }

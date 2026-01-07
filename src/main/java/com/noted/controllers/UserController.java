@@ -34,7 +34,6 @@ public class UserController {
         try {
             User user = userService.createUser(request.username(), request.password());
 
-            // create a user folder when a user is created
             userFolderService.createUserFolder(user.getUserId());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
@@ -70,7 +69,6 @@ public class UserController {
         }
     }
 
-    // add a logout route and JWT
     @PostMapping("/delete-account")
     public ResponseEntity<Void> deleteAccount(@RequestBody UserRequest request) {
         try {
