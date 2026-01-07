@@ -17,7 +17,7 @@ public class FolderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static final String CREATE_FOLDER = "INSERT INTO folder (id, user_folder_id, parent_id, name, type) VALUES (?, ?, ?, ?, folder);";
+    private static final String CREATE_FOLDER = "INSERT INTO folder (id, user_folder_id, parent_id, name, type) VALUES (?, ?, ?, ?, ?);";
 
     private static final String GET_FOLDERS_BY_USER_FOLDER_ID = "SELECT * FROM folder WHERE user_folder_id = ?;";
 

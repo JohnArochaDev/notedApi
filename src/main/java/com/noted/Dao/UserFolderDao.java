@@ -27,6 +27,9 @@ public class UserFolderDao {
     private static final String FIND_USER_FOLDER_BY_USER_ID
             = "SELECT * FROM user_folder WHERE user_id = ?;";
 
+    private static final String USER_FOLDER_ID_EXISTS
+            = "SELECT COUNT(*) FROM user_folder WHERE id = ?;";
+
     public void createUserFolder(UUID id, UUID userId) {
         jdbcTemplate.update(INSERT_USER_FOLDER, id, userId);
     }
@@ -53,5 +56,11 @@ public class UserFolderDao {
         );
 
         return results.isEmpty() ? null : results.get(0);
+    }
+
+    public boolean userFolderExistsById(UUID id) {
+        Integer count = jdbcTemplate.queryForObject(USER_FOLDER_ID_EXISTS, Integer.class, id);
+
+        return count != null && count > 0;
     }
 }

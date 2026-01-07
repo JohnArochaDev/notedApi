@@ -12,6 +12,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.noted.Dao.FolderDao;
 import com.noted.Dao.NodeFileDao;
+import com.noted.Dao.UserFolderDao;
 import com.noted.models.Folder;
 import com.noted.models.NodeFile;
 import com.noted.models.UserFolder;
@@ -23,10 +24,12 @@ public class FolderService {
 
     private final FolderDao folderDao;
     private final NodeFileDao nodeFileDao;
+    private final UserFolderDao userFolderDao;
 
-    public FolderService(FolderDao folderDao, NodeFileDao nodeFileDao) {
+    public FolderService(FolderDao folderDao, NodeFileDao nodeFileDao, UserFolderDao userFolderDao) {
         this.folderDao = folderDao;
         this.nodeFileDao = nodeFileDao;
+        this.userFolderDao = userFolderDao;
     }
 
     public UserFolder getUserFolderHierarchy(UUID userFolderId) {
@@ -115,5 +118,14 @@ public class FolderService {
         }
 
         return (UUID) userIdObj;
+    }
+
+    public void createFolder(UUID userFolderId, UUID parentId, String name) {
+        if (!userFolderDao.userFolderExistsById(userFolderId)) {
+            throw new RuntimeException("user folder does not exist");
+        }
+        UUID id = UUID.randomUUID();
+
+        folderDao.createFolder(id, userFolderId, parentId, name);
     }
 }
