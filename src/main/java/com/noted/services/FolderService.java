@@ -119,12 +119,22 @@ public class FolderService {
         return (UUID) userIdObj;
     }
 
-    public void createFolder(UUID userFolderId, UUID parentId, String name) {
+    public Folder createFolder(UUID userFolderId, UUID parentId, String name) {
         if (!userFolderDao.userFolderExistsById(userFolderId)) {
             throw new RuntimeException("user folder does not exist");
         }
         UUID id = UUID.randomUUID();
 
-        folderDao.createFolder(id, userFolderId, parentId, name);
+        return folderDao.createFolder(id, userFolderId, parentId, name);
+    }
+
+    public void updateFolder(UUID id, String name) {
+        boolean folder = folderDao.folderExistsById(id);
+
+        if (!folder) {
+            throw new RuntimeException("user folder does not exist");
+        }
+
+        folderDao.updateFolderById(id, name);
     }
 }

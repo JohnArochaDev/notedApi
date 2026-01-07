@@ -5,12 +5,15 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.noted.dto.NewFolderRequest;
 import com.noted.dto.NewNodeFileRequest;
+import com.noted.dto.UpdateFolderRequest;
+import com.noted.models.Folder;
 import com.noted.models.UserFolder;
 import com.noted.services.FolderService;
 import com.noted.services.NodeFileService;
@@ -55,11 +58,22 @@ public class UserFolderController {
 
             UUID userFolderId = userFolderService.findUserFolderIdByUserId(currentUserId);
 
-            folderService.createFolder(userFolderId, (UUID) body.parent_id(), (String) body.name());
+            Folder folder = folderService.createFolder(userFolderId, (UUID) body.parent_id(), (String) body.name());
+
+            return ResponseEntity.ok().body(folder);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to create folder: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/folders")
+    public ResponseEntity<?> updateFolder(@RequestBody UpdateFolderRequest body) {
+        try {
+            folderService.updateFolder((UUID) body.id(), (String) body.name());
 
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to create folder: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to update folder: " + e.getMessage());
         }
     }
 
