@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.noted.dto.NewFolderRequest;
 import com.noted.dto.NewNodeFileRequest;
 import com.noted.dto.UpdateFolderRequest;
+import com.noted.dto.UpdateNodeRequest;
 import com.noted.models.Folder;
+import com.noted.models.NodeFile;
 import com.noted.models.UserFolder;
 import com.noted.services.FolderService;
 import com.noted.services.NodeFileService;
@@ -80,11 +82,23 @@ public class UserFolderController {
     @PostMapping("node-files")
     public ResponseEntity<?> createNodeFile(@RequestBody NewNodeFileRequest body) {
         try {
-            nodeFileService.createNodeFile(body.parent_id(), body.name());
+            NodeFile nodeFile = nodeFileService.createNodeFile(body.parent_id(), body.name());
+
+            return ResponseEntity.ok().body(nodeFile);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to create node file: " + e.getMessage());
+
+        }
+    }
+
+    @PutMapping("node-files")
+    public ResponseEntity<?> updateNode(@RequestBody UpdateNodeRequest body) {
+        try {
+            nodeFileService.updateNodeFile(body.id(), body.name());
 
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to create node file: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to update node: " + e.getMessage());
 
         }
     }

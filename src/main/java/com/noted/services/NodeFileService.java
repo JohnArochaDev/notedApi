@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.noted.Dao.FolderDao;
 import com.noted.Dao.NodeFileDao;
+import com.noted.models.NodeFile;
 
 @Service
 public class NodeFileService {
@@ -18,7 +19,7 @@ public class NodeFileService {
         this.folderDao = folderDao;
     }
 
-    public void createNodeFile(UUID parent_id, String name) {
+    public NodeFile createNodeFile(UUID parent_id, String name) {
         boolean folderExists = folderDao.folderExistsById(parent_id);
 
         if (!folderExists) {
@@ -27,6 +28,10 @@ public class NodeFileService {
 
         UUID id = UUID.randomUUID();
 
-        nodeFileDao.createNodeFile(id, parent_id, name);
+        return nodeFileDao.createNodeFile(id, parent_id, name);
+    }
+
+    public void updateNodeFile(UUID id, String name) {
+        nodeFileDao.updateNodeById(id, name);
     }
 }

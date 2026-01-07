@@ -20,6 +20,8 @@ public class NodeFileDao {
 
     private static final String INSERT_NODE_FILE = "INSERT INTO node_file (id, parent_id, name, type) VALUES (?, ?, ?, ?);";
 
+    private static final String UPDATE_NODE_BY_ID = "UPDATE node_file SET name = ? WHERE id = ?;";
+
     private static final String GET_NODES_BY_USER_FOLDER_ID = """
         SELECT 
             node_file.id,
@@ -45,7 +47,13 @@ public class NodeFileDao {
         );
     }
 
-    public void createNodeFile(UUID id, UUID parent_id, String name) {
+    public NodeFile createNodeFile(UUID id, UUID parent_id, String name) {
         jdbcTemplate.update(INSERT_NODE_FILE, id, parent_id, name, "node");
+
+        return new NodeFile(id, parent_id, name, NodeFileType.node, null);
+    }
+
+    public void updateNodeById(UUID id, String name) {
+        jdbcTemplate.update(UPDATE_NODE_BY_ID, name, id);
     }
 }
