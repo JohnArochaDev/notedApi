@@ -15,6 +15,7 @@ import com.noted.dto.NewNodeFileRequest;
 import com.noted.dto.NewNoduleRequest;
 import com.noted.dto.UpdateFolderRequest;
 import com.noted.dto.UpdateNodeRequest;
+import com.noted.dto.UpdateNoduleRequest;
 import com.noted.models.Folder;
 import com.noted.models.NodeFile;
 import com.noted.models.Nodule;
@@ -117,6 +118,18 @@ public class UserFolderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to create node: " + e.getMessage());
 
+        }
+    }
+
+    @PutMapping("/nodule")
+    public ResponseEntity<?> updateNodule(@RequestBody UpdateNoduleRequest body) {
+        try {
+            noduleService.updateNodule(body.id(), body.x(), body.y(), body.width(), body.height(), body.textContent());
+
+            return ResponseEntity.ok().body(null);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to update node: " + e.getMessage());
         }
     }
 
