@@ -23,6 +23,8 @@ public class FolderDao {
     private static final String GET_FOLDERS_BY_USER_FOLDER_ID
             = "SELECT * FROM folder WHERE user_folder_id = ?;";
 
+    private static final String FOLDER_EXISTS = "SELECT COUNT(*) FROM folder WHERE id = ?;";
+
     public void createFolder(UUID id, UUID user_folder_id, UUID parent_id, String name) {
         jdbcTemplate.update(CREATE_FOLDER, id, user_folder_id, parent_id, name, "folder");
     }
@@ -44,5 +46,11 @@ public class FolderDao {
                 },
                 userFolderId
         );
+    }
+
+    public boolean folderExistsById(UUID id) {
+        Integer count = jdbcTemplate.queryForObject(FOLDER_EXISTS, Integer.class, id);
+
+        return count != null && count > 0;
     }
 }

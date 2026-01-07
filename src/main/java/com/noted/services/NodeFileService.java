@@ -1,0 +1,32 @@
+package com.noted.services;
+
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import com.noted.Dao.FolderDao;
+import com.noted.Dao.NodeFileDao;
+
+@Service
+public class NodeFileService {
+
+    private final NodeFileDao nodeFileDao;
+    private final FolderDao folderDao;
+
+    public NodeFileService(NodeFileDao nodeFileDao, FolderDao folderDao) {
+        this.nodeFileDao = nodeFileDao;
+        this.folderDao = folderDao;
+    }
+
+    public void createNodeFile(UUID parent_id, String name) {
+        boolean folderExists = folderDao.folderExistsById(parent_id);
+
+        if (!folderExists) {
+            throw new RuntimeException("node file needs a parent folder");
+        }
+
+        UUID id = UUID.randomUUID();
+
+        nodeFileDao.createNodeFile(id, parent_id, name);
+    }
+}

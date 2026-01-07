@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.noted.dto.NewFolderRequest;
+import com.noted.dto.NewNodeFileRequest;
 import com.noted.models.UserFolder;
 import com.noted.services.FolderService;
+import com.noted.services.NodeFileService;
 import com.noted.services.UserFolderService;
 import com.noted.services.UserService;
 
@@ -23,10 +25,12 @@ public class UserFolderController {
 
     private final FolderService folderService;
     private final UserFolderService userFolderService;
+    private final NodeFileService nodeFileService;
 
-    public UserFolderController(UserService userService, FolderService folderService, UserFolderService userFolderService) {
+    public UserFolderController(UserService userService, FolderService folderService, UserFolderService userFolderService, NodeFileService nodeFileService) {
         this.folderService = folderService;
         this.userFolderService = userFolderService;
+        this.nodeFileService = nodeFileService;
     }
 
     @GetMapping("/folders")
@@ -56,6 +60,18 @@ public class UserFolderController {
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to create folder: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("node-files")
+    public ResponseEntity<?> createNodeFile(@RequestBody NewNodeFileRequest body) {
+        try {
+            nodeFileService.createNodeFile(body.parent_id(), body.name());
+
+            return ResponseEntity.ok().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to create node file: " + e.getMessage());
+
         }
     }
 

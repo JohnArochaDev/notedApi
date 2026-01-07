@@ -44,6 +44,7 @@ public class UserDao {
 
     public boolean usernameExists(String username) {
         Integer count = jdbcTemplate.queryForObject(USERNAME_EXISTS, Integer.class, username);
+        
         return count != null && count > 0;
     }
 
