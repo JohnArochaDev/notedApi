@@ -43,4 +43,14 @@ public class NoduleService {
         noduleDao.updateNoduleById(id, x, y, width, height, textContent);
     }
 
+    public Nodule[] getNodulesByParentId(UUID parentId) {
+        boolean nodeFile = nodeFileDao.nodeFileExistsById(parentId);
+
+        if (!nodeFile) {
+            throw new RuntimeException("No file exists to save to");
+        }
+
+        return noduleDao.getNodulesByParentId(parentId);
+    }
+
 }

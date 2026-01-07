@@ -1,5 +1,6 @@
 package com.noted.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.noted.dto.NewFolderRequest;
@@ -107,6 +109,14 @@ public class UserFolderController {
             return ResponseEntity.badRequest().body("Failed to update node: " + e.getMessage());
 
         }
+    }
+
+    @GetMapping("/nodule")
+    public ResponseEntity<Nodule[]> getNodulesByParentId(
+            @RequestParam("parentId") UUID parentId) {
+
+        Nodule[] nodules = noduleService.getNodulesByParentId(parentId);
+        return ResponseEntity.ok(nodules);
     }
 
     @PostMapping("/nodule")

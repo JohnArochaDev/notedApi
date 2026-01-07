@@ -51,7 +51,8 @@ public class NoduleDao {
                         rs.getInt("width"),
                         rs.getInt("height"),
                         null
-                )
+                ),
+                parent_id
         );
 
         return results.toArray(Nodule[]::new);
