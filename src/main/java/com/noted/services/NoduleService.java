@@ -53,4 +53,8 @@ public class NoduleService {
         return noduleDao.getNodulesByParentId(parentId);
     }
 
+    public void deleteAllNodulesByParentId(UUID parentId) {
+        noduleDao.deleteAllNodulesByParentId(parentId);
+    }
+
 }

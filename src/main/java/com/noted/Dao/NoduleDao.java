@@ -31,6 +31,9 @@ public class NoduleDao {
     private static final String NODULE_EXISTS
             = "SELECT COUNT(*) FROM nodule WHERE id = ?;";
 
+    private static final String DELETE_ALL_NODULES_BY_PARENT_ID
+            = "DELETE FROM nodule WHERE parent_id = ?";
+
     public Nodule insertNodule(UUID id, UUID parent_id, Integer x, Integer y, Integer width, Integer height, String text_content) {
         jdbcTemplate.update(INSERT_NODULE, id, parent_id, "textNode", x, y, width, height, text_content);
 
@@ -66,5 +69,9 @@ public class NoduleDao {
         Integer count = jdbcTemplate.queryForObject(NODULE_EXISTS, Integer.class, id);
 
         return count != null && count > 0;
+    }
+
+    public void deleteAllNodulesByParentId(UUID parentId) {
+        jdbcTemplate.update(DELETE_ALL_NODULES_BY_PARENT_ID, parentId);
     }
 }
