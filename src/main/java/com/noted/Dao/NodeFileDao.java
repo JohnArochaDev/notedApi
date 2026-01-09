@@ -27,6 +27,9 @@ public class NodeFileDao {
     private static final String UPDATE_NODE_BY_ID
             = "UPDATE node_file SET name = ? WHERE id = ?;";
 
+    private static final String DELETE_NODE_BY_ID
+            = "DELETE FROM node_file WHERE id = ?;";
+
     private static final String GET_NODES_BY_USER_FOLDER_ID = """
         SELECT 
             node_file.id,
@@ -60,6 +63,10 @@ public class NodeFileDao {
 
     public void updateNodeById(UUID id, String name) {
         jdbcTemplate.update(UPDATE_NODE_BY_ID, name, id);
+    }
+
+    public void deleteNodeById(UUID id) {
+        jdbcTemplate.update(DELETE_NODE_BY_ID, id);
     }
 
     public boolean nodeFileExistsById(UUID id) {

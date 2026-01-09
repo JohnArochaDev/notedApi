@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.noted.dto.DeleteFolderRequest;
+import com.noted.dto.DeleteFolderOrNodeRequest;
 import com.noted.dto.NewFolderRequest;
 import com.noted.dto.NewNodeFileRequest;
 import com.noted.dto.NoduleOperation;
@@ -89,7 +89,7 @@ public class UserFolderController {
     }
 
     @DeleteMapping("/folders")
-    public ResponseEntity<?> updateFolder(@RequestBody DeleteFolderRequest body) {
+    public ResponseEntity<?> updateFolder(@RequestBody DeleteFolderOrNodeRequest body) {
         try {
             folderService.deleteFolder((UUID) body.id());
 
@@ -112,14 +112,25 @@ public class UserFolderController {
     }
 
     @PutMapping("node-files")
-    public ResponseEntity<?> updateNode(@RequestBody UpdateNodeRequest body) {
+    public ResponseEntity<?> updateNodeFile(@RequestBody UpdateNodeRequest body) {
         try {
             nodeFileService.updateNodeFile(body.id(), body.name());
 
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to update node: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to update node file: " + e.getMessage());
 
+        }
+    }
+
+    @DeleteMapping("/node-files")
+    public ResponseEntity<?> deleteNodeFile(@RequestBody DeleteFolderOrNodeRequest body) {
+        try {
+            nodeFileService.deleteNodeFile((UUID) body.id());
+
+            return ResponseEntity.ok().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to delete node file: " + e.getMessage());
         }
     }
 

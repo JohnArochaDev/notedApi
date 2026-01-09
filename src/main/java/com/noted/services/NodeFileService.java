@@ -34,4 +34,8 @@ public class NodeFileService {
     public void updateNodeFile(UUID id, String name) {
         nodeFileDao.updateNodeById(id, name);
     }
+
+    public void deleteNodeFile(UUID id) {
+        nodeFileDao.deleteNodeById(id);
+    }
 }
