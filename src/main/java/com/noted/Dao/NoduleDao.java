@@ -37,8 +37,6 @@ public class NoduleDao {
     public Nodule insertNodule(UUID id, UUID parent_id, Integer x, Integer y, Integer width, Integer height, String text_content) {
         String textToSave = text_content != null ? text_content : "";
 
-        System.out.println("DAO inserting text: '" + textToSave + "'");
-
         jdbcTemplate.update(
                 INSERT_NODULE,
                 id, parent_id, "textNode", x, y, width, height, textToSave

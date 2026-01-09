@@ -27,9 +27,6 @@ public class NoduleService {
 
         UUID id = UUID.randomUUID();
 
-        // Add debug log
-        System.out.println("Service received textContent: '" + textContent + "'");
-
         return noduleDao.insertNodule(id, parentId, x, y, width, height, textContent);
     }
 

@@ -163,8 +163,6 @@ public class UserFolderController {
 
             String textContent = op.textContent() != null ? op.textContent() : "";
 
-            System.out.println("Saving nodule with text: '" + textContent + "'"); // it is here
-
             noduleService.createNodule(
                     parentId,
                     op.x(),
