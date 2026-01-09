@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.noted.dto.DeleteFolderRequest;
 import com.noted.dto.NewFolderRequest;
 import com.noted.dto.NewNodeFileRequest;
 import com.noted.dto.NoduleOperation;
@@ -83,6 +85,17 @@ public class UserFolderController {
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update folder: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/folders")
+    public ResponseEntity<?> updateFolder(@RequestBody DeleteFolderRequest body) {
+        try {
+            folderService.deleteFolder((UUID) body.id());
+
+            return ResponseEntity.ok().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to delete folder: " + e.getMessage());
         }
     }
 

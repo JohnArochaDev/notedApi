@@ -132,9 +132,20 @@ public class FolderService {
         boolean folder = folderDao.folderExistsById(id);
 
         if (!folder) {
-            throw new RuntimeException("user folder does not exist");
+            throw new RuntimeException("folder does not exist");
         }
 
         folderDao.updateFolderById(id, name);
     }
+
+    public void deleteFolder(UUID id) {
+        boolean folder = folderDao.folderExistsById(id);
+
+        if (!folder) {
+            throw new RuntimeException("folder does not exist");
+        }
+
+        folderDao.deleteFolderById(id);
+    }
+
 }

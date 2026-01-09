@@ -26,6 +26,9 @@ public class FolderDao {
     private static final String UPDATE_FOLDER
             = "UPDATE folder SET name = ? WHERE id = ?;";
 
+    private static final String DELETE_FOLDER_BY_ID
+            = "DELETE FROM folder WHERE id = ?;";
+
     private static final String FOLDER_EXISTS = "SELECT COUNT(*) FROM folder WHERE id = ?;";
 
     public Folder createFolder(UUID id, UUID user_folder_id, UUID parent_id, String name) {
@@ -61,5 +64,9 @@ public class FolderDao {
 
     public void updateFolderById(UUID id, String name) {
         jdbcTemplate.update(UPDATE_FOLDER, name, id);
+    }
+
+    public void deleteFolderById(UUID id) {
+        jdbcTemplate.update(DELETE_FOLDER_BY_ID, id);
     }
 }
