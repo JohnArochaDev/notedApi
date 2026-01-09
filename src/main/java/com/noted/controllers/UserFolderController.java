@@ -1,6 +1,7 @@
 package com.noted.controllers;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -147,32 +148,34 @@ public class UserFolderController {
             @RequestBody List<NoduleOperation> operations,
             HttpServletRequest request) {
 
-        // we delete all nodes proir to saving new ones
         UUID parentId = operations.stream()
-                .map(op -> (UUID) op.id() == null ? (UUID) op.parentId() : null)
-                .filter(java.util.Objects::nonNull)
+                .map(op -> op.id() == null ? op.parentId() : null)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("At least one create operation must provide parentId"));
 
         noduleService.deleteAllNodulesByParentId(parentId);
 
-        // we save all the new nodes
         for (NoduleOperation op : operations) {
-            if ( (UUID) op.parentId() == null) {
+            if (op.parentId() == null) {
                 throw new IllegalArgumentException("parentId required for new nodule");
             }
+
+            String textContent = op.textContent() != null ? op.textContent() : "";
+
+            System.out.println("Saving nodule with text: '" + textContent + "'"); // it is here
+
             noduleService.createNodule(
                     parentId,
                     op.x(),
                     op.y(),
                     op.width(),
                     op.height(),
-                    op.textContent()
+                    textContent
             );
         }
 
         Nodule[] updatedNodules = noduleService.getNodulesByParentId(parentId);
-
         return ResponseEntity.ok(updatedNodules);
     }
 

@@ -35,26 +35,45 @@ public class NoduleDao {
             = "DELETE FROM nodule WHERE parent_id = ?";
 
     public Nodule insertNodule(UUID id, UUID parent_id, Integer x, Integer y, Integer width, Integer height, String text_content) {
-        jdbcTemplate.update(INSERT_NODULE, id, parent_id, "textNode", x, y, width, height, text_content);
+        String textToSave = text_content != null ? text_content : "";
 
-        Integer integerWidth = width;
-        Integer integerHeight = height;
+        System.out.println("DAO inserting text: '" + textToSave + "'");
 
-        return new Nodule(id, parent_id, "textNode", new Coordinates(x, y), integerWidth, integerHeight, new NoduleData(text_content));
+        jdbcTemplate.update(
+                INSERT_NODULE,
+                id, parent_id, "textNode", x, y, width, height, textToSave
+        );
+
+        NoduleData data = new NoduleData(textToSave);
+
+        return new Nodule(
+                id,
+                parent_id,
+                "textNode",
+                new Coordinates(x, y),
+                width,
+                height,
+                data
+        );
     }
 
     public Nodule[] getNodulesByParentId(UUID parent_id) {
         List<Nodule> results = jdbcTemplate.query(
                 GET_NODULES_BY_PARENT_ID,
-                (rs, _) -> new Nodule(
-                        UUID.fromString(rs.getString("id")),
-                        UUID.fromString(rs.getString("parent_id")),
-                        rs.getString("type"),
-                        new Coordinates(rs.getInt("x"), rs.getInt("y")),
-                        rs.getInt("width"),
-                        rs.getInt("height"),
-                        null
-                ),
+                (rs, _) -> {
+                    String textContent = rs.getString("text_content");
+                    NoduleData data = new NoduleData(textContent != null ? textContent : "");
+
+                    return new Nodule(
+                            UUID.fromString(rs.getString("id")),
+                            UUID.fromString(rs.getString("parent_id")),
+                            rs.getString("type"),
+                            new Coordinates(rs.getInt("x"), rs.getInt("y")),
+                            rs.getInt("width"),
+                            rs.getInt("height"),
+                            data
+                    );
+                },
                 parent_id
         );
 

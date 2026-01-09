@@ -20,14 +20,15 @@ public class NoduleService {
     }
 
     public Nodule createNodule(UUID parentId, int x, int y, int width, int height, String textContent) {
-
         boolean nodeFile = nodeFileDao.nodeFileExistsById(parentId);
-
         if (!nodeFile) {
             throw new RuntimeException("No file exists to save to");
         }
 
         UUID id = UUID.randomUUID();
+
+        // Add debug log
+        System.out.println("Service received textContent: '" + textContent + "'");
 
         return noduleDao.insertNodule(id, parentId, x, y, width, height, textContent);
     }
