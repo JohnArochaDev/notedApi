@@ -32,10 +32,22 @@ public class NodeFileService {
     }
 
     public void updateNodeFile(UUID id, String name) {
+        boolean nodeFileExists = nodeFileDao.nodeFileExistsById(id);
+
+        if (!nodeFileExists) {
+            throw new RuntimeException("node file doesnt exist");
+        }
+
         nodeFileDao.updateNodeById(id, name);
     }
 
     public void deleteNodeFile(UUID id) {
+        boolean nodeFileExists = nodeFileDao.nodeFileExistsById(id);
+
+        if (!nodeFileExists) {
+            throw new RuntimeException("node file doesnt exist");
+        }
+
         nodeFileDao.deleteNodeById(id);
     }
 }
