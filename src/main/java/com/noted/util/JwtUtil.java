@@ -6,20 +6,46 @@ import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtUtil {
 
-    private final SecretKey secretKey = Keys.hmacShaKeyFor(
-            "your-very-long-random-secret-key-at-least-256-bits".getBytes(StandardCharsets.UTF_8)
-    );
+    @Value("${jwt.secret}")
+    private String jwtSecretString;
+
+    private SecretKey secretKey;
 
     private final long expirationMs = 1000 * 60 * 60 * 24; // 24 hours
+
+    @PostConstruct
+    public void init() {
+        if (jwtSecretString == null || jwtSecretString.trim().isEmpty()) {
+            throw new IllegalStateException(
+                "JWT secret is missing or empty! Please set 'jwt.secret' in application properties " +
+                "or environment variable JWT_SECRET"
+            );
+        }
+
+        byte[] keyBytes = jwtSecretString.getBytes(StandardCharsets.UTF_8);
+
+        // Safety check - very important
+        if (keyBytes.length < 32) {
+            throw new IllegalStateException(
+                "JWT secret is too short! Minimum 32 bytes required. " +
+                "Current length: " + keyBytes.length + " bytes. " +
+                "Use at least: openssl rand -base64 48"
+            );
+        }
+
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String generateToken(UUID userId, String username) {
         return Jwts.builder()
