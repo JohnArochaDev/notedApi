@@ -1,7 +1,6 @@
 package com.noted.controllers;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -145,14 +144,9 @@ public class UserFolderController {
 
     @PostMapping("/nodules")
     public ResponseEntity<Nodule[]> saveNodules(
+            @RequestParam UUID parentId,
             @RequestBody List<NoduleOperation> operations,
             HttpServletRequest request) {
-
-        UUID parentId = operations.stream()
-                .map(op -> op.id() == null ? op.parentId() : null)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("At least one create operation must provide parentId"));
 
         noduleService.deleteAllNodulesByParentId(parentId);
 
